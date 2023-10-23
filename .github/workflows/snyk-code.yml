@@ -37,5 +37,5 @@ jobs:
           SNYK_TOKEN: ${{ secrets.ASUBEDI_SNYK_TOKEN}}
           
       - name: Snyk Code test
-        run: snyk code test --severity-threshold=high
+        run: snyk code test 
         continue-on-error: true
