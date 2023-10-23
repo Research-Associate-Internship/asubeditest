@@ -1,17 +1,41 @@
-name: "snyk test"
-on: [push, pull_request]
+name: Snyk Security
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
 jobs:
-  build:
+  snyk:
+    permissions:
+      contents: read 
+      security-events: write 
+      actions: read 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: snyk/actions/setup@master
-      - name: Snyk Test
-        run: snyk test --sarif-file-output=snyk-sarif1.json
-        continue-on-error: true
+      - name: Set up Snyk CLI to check for security issues
+        uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adB
+
         env:
-           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk-sarif1.json
+          SNYK_TOKEN: ${{ASUBEDI_SNYK_TOKEN }}
+
+
+      - name: build
+        run: npm install
+        env:
+          SNYK_TOKEN: ${{ASUBEDI_SNYK_TOKEN}}
+
+          
+
+      - name: SNYK Authenticate
+        run: snyk auth $SNYK_TOKEN
+        env:
+          SNYK_TOKEN: ${{ASUBEDI_SNYK_TOKEN}}
+          
+      - name: Snyk Code test
+        run: snyk code test --severity-threshold=high
+        continue-on-error: true
