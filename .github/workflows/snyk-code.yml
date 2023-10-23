@@ -32,7 +32,7 @@ jobs:
           
 
       - name: SNYK Authenticate
-        run: snyk auth $ASUBEDI_SNYK_TOKEN
+        run: snyk auth $SNYK_TOKEN
         env:
           SNYK_TOKEN: ${{ secrets.ASUBEDI_SNYK_TOKEN}}
           
